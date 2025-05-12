@@ -8,5 +8,9 @@ app = FastAPI()
 def on_startup():
     create_db_and_tables()
 
-app.include_router( tasks.router )
+app.include_router(tasks.router)
 
+# Código que se añade
+@app.get("/version")
+def version():
+    return {"message": "Rios Bermudez, Alejandro - v0"}
