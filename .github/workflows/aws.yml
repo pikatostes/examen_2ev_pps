@@ -29,10 +29,10 @@ jobs:
             echo "Connected to EC2"
 
             # Detener y eliminar contenedor anterior, si existe
-            docker stop web1 || true
-            docker rm web1 || true
-            docker rmi dockeruser/galeria || true
+            docker stop api-rios || true
+            docker rm api-rios || true
+            docker rmi pikatostes/api-rios || true
 
             # Ejecutar nuevo contenedor
-            docker run -d -p 80:80 --name web1 dockeruser/galeria
+            docker run -d -p 80:80 --name api-rios pikatostes/api-rios
           EOF
