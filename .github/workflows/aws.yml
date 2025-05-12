@@ -1,33 +1,38 @@
 name: AWS EC2 Deploy
+
 on:
   workflow_run:
-    workflows: 
-    - Dockerhub Image Build and Push
+    workflows:
+      - Dockerhub Image Build and Push
     types:
-    - completed
+      - completed
 
   push:
-    branches: [ main ]
+    branches: [main]
+
 jobs:
   Deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: Deploy in EC2
         env:
           PRIVATE_KEY: ${{ secrets.CLAVE_EC2 }}
-          HOSTNAME : ${{ secrets.IP_EC2 }}
-          USER_NAME : ${{ secrets.USER_EC2 }}
-
+          HOSTNAME: ${{ secrets.IP_EC2 }}
+          USER_NAME: ${{ secrets.USER_EC2 }}
         run: |
-          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          echo "$PRIVATE_KEY" > private_key
+          chmod 600 private_key
 
-          ssh -o StrictHostKeyChecking=no -i private_key
-          ${USER_NAME}@${HOSTNAME} '
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} << 'EOF'
+            echo "Connected to EC2"
 
-          # Now we have got the access of EC2 and we will start the deploy
-          .
-          docker stop web1 && docker rm web1 && docker rmi
-          dockeruser/galeria
-          docker run -d -p 80:80 --name web1 dockeruser/galeria
-          '
+            # Detener y eliminar contenedor anterior, si existe
+            docker stop web1 || true
+            docker rm web1 || true
+            docker rmi dockeruser/galeria || true
+
+            # Ejecutar nuevo contenedor
+            docker run -d -p 80:80 --name web1 dockeruser/galeria
+          EOF
