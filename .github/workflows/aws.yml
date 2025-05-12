@@ -34,5 +34,5 @@ jobs:
             docker rmi pikatostes/api-rios || true
 
             # Ejecutar nuevo contenedor
-            docker run -d -p 80:80 --name api-rios pikatostes/api-rios
+            docker run -d -p 80:8000 --name api-rios pikatostes/api-rios
           EOF
