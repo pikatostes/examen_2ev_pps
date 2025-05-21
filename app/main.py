@@ -13,4 +13,5 @@ app.include_router(tasks.router)
 # Código que se añade
 @app.get("/version")
 def version():
+    test = true
     return {"message": "Rios Bermudez, Alejandro - v2.3 - Linting"}
